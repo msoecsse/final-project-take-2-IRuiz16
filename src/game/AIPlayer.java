@@ -1,4 +1,4 @@
 package game;
 
-public class AIPlayer {
+public class AIPlayer implements Player{
 }

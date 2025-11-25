@@ -1,4 +1,4 @@
 package game;
 
-public class HumanPlayer {
+public class HumanPlayer implements Player{
 }
