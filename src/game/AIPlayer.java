@@ -1,13 +1,17 @@
 package game;
 
 public class AIPlayer implements Player{
-    private String xo;
+    private String piece;
 
-    public AIPlayer(String xo){
-        this.xo = xo;
+    public AIPlayer(String piece){
+        this.piece = piece;
     }
     @Override
     public void makeMove() {
         //have it be random for now
+    }
+    @Override
+    public String getPiece(){
+        return piece;
     }
 }
