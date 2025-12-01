@@ -35,7 +35,7 @@ public class GameController {
     @FXML
     public void initialize(){
         gameProxy = new GameProxy(600, 600, gridPane);
-        gameProxy.popUp(); // allows user to pick x or o
+        gameProxy.start();
 
     }
     @FXML
