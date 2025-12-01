@@ -5,7 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.w3c.dom.events.MouseEvent;
+import javafx.scene.input.MouseEvent;
 
 public class GameController {
 
