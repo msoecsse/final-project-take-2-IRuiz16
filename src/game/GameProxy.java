@@ -1,23 +1,26 @@
 package game;
 
-import javafx.scene.control.Button;
+import javafx.animation.PauseTransition;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.util.Optional;
 
 //will hold the logic to all of the game interacts with the player and the controller to figure what needs to be done
 public class GameProxy {
-    private Player player;
-    private Player aiPlayer;
+    private Player humanPlayer;
+    private Player aiplayer;
     private GameController gameController;
     private int height;
     private int width;
-    private Pane gamePane;
+    private GridPane gamePane;
     private String playerChoice;
-    private String aiChoice;
+    private String player2Choice;
 
     public GameProxy(int height, int width, GridPane gamePane){ //idk if we need height and width yet but doesn't hurt to have
         this.height = height;
@@ -30,7 +33,7 @@ public class GameProxy {
         Dialog<ButtonType> popup = new Dialog<>();
         ButtonType x = new ButtonType("X");
         ButtonType o = new ButtonType("O");
-        popup.setTitle("Pick X or O");
+        popup.setTitle("Player 1: Pick X or O");
 
         popup.getDialogPane().getButtonTypes().addAll(x, o);
         Optional<ButtonType> choice = popup.showAndWait();
@@ -38,17 +41,39 @@ public class GameProxy {
         if(choice.isPresent()){
             ButtonType button = choice.get();
             playerChoice = button.getText();
-            aiChoice = playerChoice.equals("X") ? "O" : "X";
+            player2Choice = playerChoice.equals("X") ? "O" : "X";
         }
+    }
+    private void message(String message){
+        PauseTransition pause = new PauseTransition(Duration.millis(1));
+        pause.setOnFinished(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("MESSAGE");
+            alert.setContentText(message);
+            alert.show();
+        });
+        pause.play();
     }
 
     public void start(){
         popUp();
-        this.player = new HumanPlayer(playerChoice);
-        this.aiPlayer = new AIPlayer(aiChoice);
+        this.humanPlayer = new HumanPlayer(playerChoice, gamePane);
+        this.aiplayer = new AIPlayer(player2Choice, gamePane);
+        message("Player 1 starts");
+
     }
 
+    public GameController getGameController(){
+        return gameController;
+    }
 
+    public boolean validMove(TextField box) {
+        return !box.getText().isEmpty();
+    }
+
+    public Pane getGamePane(){
+        return gamePane;
+    }
     /**
      * Validates the players turn
      * @return

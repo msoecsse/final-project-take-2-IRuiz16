@@ -1,6 +1,8 @@
 package game;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Popup;
@@ -31,6 +33,7 @@ public class GameController {
     private GridPane gridPane;
 
     private GameProxy gameProxy;
+    private MouseEvent event;
 
     @FXML
     public void initialize(){
@@ -39,8 +42,26 @@ public class GameController {
 
     }
     @FXML
-    public void mark(MouseEvent event){
+    public Point2D mark(MouseEvent event){
+        this.event = event;
         System.out.println("boo");
+
+        Node clicked = (Node) event.getSource();
+
+        Integer row = GridPane.getRowIndex(clicked);
+        Integer col = GridPane.getColumnIndex(clicked);
+
+        return new Point2D(col, row);
     }
 
+    public MouseEvent getMouseEvent(){
+        if(event != null){
+            return event;
+        }
+        return null;
+    }
+
+    protected GameProxy getGameProxy() {
+        return gameProxy;
+    }
 }
