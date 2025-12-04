@@ -34,31 +34,36 @@ public class GameController {
 
     private GameProxy gameProxy;
     private MouseEvent event;
+    private Point2D coordinates;
 
     @FXML
     public void initialize(){
         gameProxy = new GameProxy(600, 600, gridPane);
         gameProxy.start();
-
     }
     @FXML
-    public Point2D mark(MouseEvent event){
+    public void mark(MouseEvent event){
         this.event = event;
         System.out.println("boo");
 
         Node clicked = (Node) event.getSource();
 
-        Integer row = GridPane.getRowIndex(clicked);
-        Integer col = GridPane.getColumnIndex(clicked);
+        Integer col = GridPane.getColumnIndex(clicked) == null ? 0 : GridPane.getColumnIndex(clicked);
+        Integer row = GridPane.getRowIndex(clicked) == null ? 0 : GridPane.getRowIndex(clicked);
 
-        return new Point2D(col, row);
+        coordinates = new Point2D(col, row);
+    }
+
+    public boolean canMakeMove(Point2D coordinates){
+        return coordinates == null;
+    }
+
+    public Point2D getCoordinate(){
+     return coordinates;
     }
 
     public MouseEvent getMouseEvent(){
-        if(event != null){
-            return event;
-        }
-        return null;
+        return event;
     }
 
     protected GameProxy getGameProxy() {

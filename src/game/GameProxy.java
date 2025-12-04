@@ -1,6 +1,7 @@
 package game;
 
 import javafx.animation.PauseTransition;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -26,9 +27,10 @@ public class GameProxy {
         this.height = height;
         this.width = width;
         this.gamePane = gamePane;
+        this.gameController = new GameController();
     }
 
-    private void popUp(){
+    private void startPopUp(){
         //get this choice and set as players choice
         Dialog<ButtonType> popup = new Dialog<>();
         ButtonType x = new ButtonType("X");
@@ -56,32 +58,40 @@ public class GameProxy {
     }
 
     public void start(){
-        popUp();
+        startPopUp();
         this.humanPlayer = new HumanPlayer(playerChoice, gamePane);
         this.aiplayer = new AIPlayer(player2Choice, gamePane);
-        message("Player 1 starts");
+        //does the logic for the player to make a move
+        if(humanPlayer.getPiece().equalsIgnoreCase("x")){
+            message("Player 1 starts");
+            makeMove(humanPlayer);
+        } else{
+            message("AI player starts");
+            makeMove(aiplayer);
+        }
+    }
 
+    private void makeMove(Player player){
+        for (Node node : gamePane.getChildren()) {
+            node.setOnMouseClicked(event -> {
+                TextField clicked = (TextField) event.getSource();
+                if(clicked.getText().isEmpty()){
+                    player.makeMove(clicked);
+                    //after move has been validated and made display the change onto the box
+                    //will need to get the coordinates and (maybe) have a boolean where it moveMade true/false
+                    //idk just have something that will go to the controller to update it
+                } else{
+                    message("Can't make move!\nBox already has been played!");
+                }
+            });
+        }
     }
 
     public GameController getGameController(){
         return gameController;
     }
 
-    public boolean validMove(TextField box) {
-        return !box.getText().isEmpty();
-    }
-
     public Pane getGamePane(){
         return gamePane;
     }
-    /**
-     * Validates the players turn
-     * @return
-     */
-    protected boolean turn(){
-        //want it to keep flopping back and forth
-        //need a method or variable that keeps track who went last
-        return false;
-    }
-
 }

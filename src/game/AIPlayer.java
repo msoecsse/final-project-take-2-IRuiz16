@@ -1,5 +1,6 @@
 package game;
 
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class AIPlayer implements Player{
@@ -12,7 +13,7 @@ public class AIPlayer implements Player{
     }
 
     @Override
-    public boolean makeMove() {
+    public boolean makeMove(TextField textField) {
         int randomMove = (int) (Math.random() * 9) + 1;
         //place this in one of the boxes 1-9
 

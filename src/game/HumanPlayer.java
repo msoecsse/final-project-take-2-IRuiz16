@@ -1,5 +1,6 @@
 package game;
 
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class HumanPlayer implements Player{
@@ -14,12 +15,16 @@ public class HumanPlayer implements Player{
 
     }
     @Override
-    public boolean makeMove() {
+    public boolean makeMove(TextField textField) {
+        boolean played = false;
         GameController controller = proxy.getGameController();
-        controller.mark(controller.getMouseEvent()); //mark() returns grid points (col, row)
+        if(textField.getText().isEmpty()){
+            controller.mark(controller.getMouseEvent()); //mark doesn't return anything but there is a getCoordinates method that should work
+            played = true;
+        }
         System.out.println("WORKED?");
         //move was made so now need to validate it - send back to proxy
-        return true;
+        return played;
     }
     @Override
     public String getPiece(){
