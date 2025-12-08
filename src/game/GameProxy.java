@@ -2,7 +2,10 @@ package game;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
@@ -16,10 +19,14 @@ public class GameProxy {
     private String playerChoice;
     private String player2Choice;
     private boolean turn;
-    private boolean winner;
+    private Player winner;
+    private boolean done;
+    private int iterations;
 
     public GameProxy(GridPane gamePane){
         this.gridPane = gamePane;
+        this.done = false;
+        this.iterations = 0;
     }
 
     public void start(){
@@ -38,36 +45,39 @@ public class GameProxy {
 
     public void handleHumanPlay(MouseEvent event) {
         TextField clicked = (TextField) event.getSource();
-        if(!clicked.getText().isEmpty()){
-            message("Can't make move!\nBox already has been played!");
-        }
-
-        boolean played = humanPlayer.makeMove(clicked);
-        if(clicked.getText().isEmpty()) {
-            if(turn && played) {
-                turn = false;
-                if (checkWin()) {
-                    message("You are the winner");
-                }
-            } else {
+        if(!done){
+            if(!clicked.getText().isEmpty()){
+                message("Can't make move!\nBox already has been played!");
+            }
+            if(!turn){
                 message("Not your turn!");
             }
+            boolean played = humanPlayer.makeMove(clicked);
+            if(played) {
+                turn = false;
+                if (checkWin(humanPlayer, iterations++)) {
+                    message(winner.toString() + " is the winner");
+                }
+            }
+            AiPlay();
         }
-        AiPlay();
     }
 
     private void AiPlay(){
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(e -> {
-            boolean play = aiplayer.makeMove(null);
-            if(play){
-                turn = true;
-                if(checkWin()){
-                    message("AiPlayer is the winner");
+        if(!done){
+            pause.setOnFinished(e -> {
+                boolean play = aiplayer.makeMove(null);
+                if(play){
+                    turn = true;
+                    if(checkWin(aiplayer, iterations++)){
+                        message(winner.toString() + " is the winner");
+                    }
                 }
-            }
-        });
-        pause.play();
+            });
+            pause.play();
+        }
+
     }
 
     public void mark(TextField textField, String piece){
@@ -90,24 +100,33 @@ public class GameProxy {
         return board;
     }
 
-    private boolean checkWin(){
+    private boolean checkWin(Player player, int n){
         String[][] board = getBoard(gridPane);
         boolean win = false;
+        if (n < 8) {
+            if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[2][2])) ||
+                    (!board[2][0].isEmpty() && board[2][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[0][2]))){
+                //check diagonals
+                win = true;
+            } else if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[1][0]) && board[1][0].equalsIgnoreCase(board[2][0])) ||
+                    (!board[0][1].isEmpty() && board[0][1].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[2][1])) ||
+                    (!board[0][2].isEmpty() && board[0][2].equalsIgnoreCase(board[1][2]) && board[1][2].equalsIgnoreCase(board[2][2]))){
+                //check columns
+                win = true;
+            } else if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[0][1]) && board[0][1].equalsIgnoreCase(board[0][2])) ||
+                    (!board[1][0].isEmpty() && board[1][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[1][2])) ||
+                    (!board[2][0].isEmpty() && board[2][0].equalsIgnoreCase(board[2][1]) && board[2][1].equalsIgnoreCase(board[2][2]))){
+                //check rows
+                win = true;
+            }
+        } else{
+            message("It is a draw");
+            done = true;
+        }
 
-        if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[2][2])) ||
-                (!board[2][0].isEmpty() && board[2][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[0][2]))){
-            //check diagonals
-            win = true;
-        } else if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[1][0]) && board[1][0].equalsIgnoreCase(board[2][0])) ||
-                (!board[0][1].isEmpty() && board[0][1].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[2][1])) ||
-                (!board[0][2].isEmpty() && board[0][2].equalsIgnoreCase(board[1][2]) && board[1][2].equalsIgnoreCase(board[2][2]))){
-            //check columns
-            win = true;
-        } else if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[0][1]) && board[0][1].equalsIgnoreCase(board[0][2])) ||
-                (!board[1][0].isEmpty() && board[1][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[1][2])) ||
-                (!board[2][0].isEmpty() && board[2][0].equalsIgnoreCase(board[2][1]) && board[2][1].equalsIgnoreCase(board[2][2]))){
-            //check rows
-            win = true;
+        if(win){
+            winner = player;
+            done = true;
         }
         return win;
     }

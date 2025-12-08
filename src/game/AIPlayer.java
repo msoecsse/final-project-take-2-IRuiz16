@@ -24,7 +24,7 @@ public class AIPlayer implements Player{
         boolean played = false;
         textField = getAiBox();
         // Get a random empty box for AI to play
-        if(textField.getText().isEmpty()){
+        if(textField != null && textField.getText().isEmpty()){
             proxy.mark(textField, piece);
             played = true;
         }
@@ -34,6 +34,11 @@ public class AIPlayer implements Player{
     @Override
     public String getPiece() {
         return piece;
+    }
+
+    @Override
+    public String toString(){
+        return "AI Player";
     }
 
     public TextField getAiBox(){

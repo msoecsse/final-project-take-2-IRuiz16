@@ -22,3 +22,5 @@ public class GameController {
         }
     }
 }
+//GameController → GameProxy.handleHumanPlay() → HumanPlayer.makeMove() → GameProxy.mark()
+

@@ -23,4 +23,8 @@ public class HumanPlayer implements Player{
     public String getPiece(){
         return piece;
     }
+    @Override
+    public String toString(){
+        return "Player 1";
+    }
 }
