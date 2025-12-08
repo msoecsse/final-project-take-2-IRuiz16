@@ -1,24 +1,31 @@
 package game;
 
+import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class AIPlayer implements Player{
     private String piece;
     private GridPane pane;
+    private GameProxy proxy;
 
-    public AIPlayer(String piece, GridPane pane){
+
+    public AIPlayer(String piece, GridPane pane, GameProxy proxy){
         this.piece = piece;
         this.pane = pane;
+        this.proxy = proxy;
     }
 
     @Override
     public boolean makeMove(TextField textField) {
-        int randomMove = (int) (Math.random() * 9) + 1;
-        //place this in one of the boxes 1-9
-
-        return false;
+        boolean played = false;
+        if(textField.getText().isEmpty()){
+            proxy.mark(textField, piece);
+            played = true;
+        }
+        return played;
     }
+    //need logic that will justify how the aiPlayer will make its move
 
     @Override
     public String getPiece() {
