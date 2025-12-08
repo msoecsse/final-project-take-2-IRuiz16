@@ -1,16 +1,13 @@
 package game;
 
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 
 public class HumanPlayer implements Player{
-    private String piece;
-    private GameProxy proxy;
-    private GridPane pane;
+    private final String piece;
+    private final GameProxy proxy;
 
-    public HumanPlayer(String piece, GridPane pane, GameProxy proxy){
+    public HumanPlayer(String piece, GameProxy proxy){
         this.piece = piece;
-        this.pane = pane;
         this.proxy = proxy;
     }
     @Override

@@ -17,14 +17,14 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TextField fx:id="topLeft" onMouseClicked="#mark" editable="false" prefHeight="135.0" prefWidth="200.0" />
-      <TextField fx:id="topRight" onMouseClicked="#mark" editable="false" prefHeight="141.0" prefWidth="200.0" GridPane.columnIndex="2" />
-      <TextField fx:id="middleLeft" onMouseClicked="#mark" editable="false" prefHeight="140.0" prefWidth="200.0" GridPane.rowIndex="1" />
-      <TextField fx:id="middleMiddle" onMouseClicked="#mark" editable="false" prefHeight="136.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="middleRight" onMouseClicked="#mark" editable="false" prefHeight="137.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <TextField fx:id="bottomRight" onMouseClicked="#mark" editable="false" prefHeight="133.0" prefWidth="200.0" GridPane.rowIndex="2" />
-      <TextField fx:id="bottomMiddle" onMouseClicked="#mark" editable="false" prefHeight="138.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <TextField fx:id="bottomLeft" onMouseClicked="#mark" editable="false" prefHeight="141.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <TextField fx:id="topMiddle" onMouseClicked="#mark" editable="false" prefHeight="137.0" prefWidth="200.0" GridPane.columnIndex="1" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="135.0" prefWidth="200.0" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="141.0" prefWidth="200.0" GridPane.columnIndex="2" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="140.0" prefWidth="200.0" GridPane.rowIndex="1" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="136.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="137.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="133.0" prefWidth="200.0" GridPane.rowIndex="2" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="138.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="141.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <TextField editable="false" onMouseClicked="#mark" prefHeight="137.0" prefWidth="200.0" GridPane.columnIndex="1" />
    </children>
 </GridPane>
