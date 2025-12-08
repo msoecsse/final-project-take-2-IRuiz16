@@ -73,31 +73,45 @@ public class GameProxy {
 
 
     public void handleMark(MouseEvent event){
-        TextField clicked = (TextField) event.getSource();
-        if(clicked.getText().isEmpty()){
-            if(turn && humanPlayer != null){
-                boolean played = humanPlayer.makeMove(clicked);
-                if(played){
-                    turn = false;
-                    // TODO: After move, check for win, then switch to AI turn
-                    checkWin(clicked);
-                }
-            } else if(!turn && aiplayer != null){
-                boolean played = aiplayer.makeMove(clicked);
-                if(played){
-                    turn = true; // Switch turn back to player
+        boolean isWinner = false;
+        String winner = "";
+        do {
+            TextField clicked = (TextField) event.getSource();
+            if (clicked.getText().isEmpty()) {
+                if (turn && humanPlayer != null) {
+                    boolean played = humanPlayer.makeMove(clicked);
+                    if (played) {
+                        turn = false;
+                        // TODO: After move, check for win, then switch to AI turn
+                        if (checkWin(clicked)) {
+                            isWinner = true;
+                            winner = "You";
+                            message(winner + " is the winner");
+                        }
+                    }
+                } else if (!turn && aiplayer != null) {
+                    boolean played = aiplayer.makeMove(clicked);
+                    if (played) {
+                        turn = true; // Switch turn back to player
+                        if (checkWin(clicked)) {
+                            isWinner = true;
+                            winner = "AIPlayer";
+                            message(winner + " is the winner");
+                        }
+                    }
+                } else {
+                    message("Not your turn!");
                 }
             } else {
-                message("Not your turn!");
+                message("Can't make move!\nBox already has been played!");
             }
-        } else{
-            message("Can't make move!\nBox already has been played!");
-        }
+        }while(isWinner);
     }
 
     public void mark(TextField textField, String piece){
         textField.setText(piece);
     }
+    //makes the board into a 2d array
     private String[][] getBoard(GridPane gridPane) {
         String[][] board = new String[3][3];
 
@@ -109,17 +123,32 @@ public class GameProxy {
             int col = (c == null) ? 0 : c;
 
             TextField cell = (TextField) node;
-            board[row][col] = cell.getText();  // "" if empty, "X" or "O"
+            board[row][col] = cell.getText();
         }
-
         return board;
     }
-    private void checkWin(TextField textField){
+    private boolean checkWin(TextField textField){
         //need to check if there are 3 boxes in a row to win
         //can iterate through each box in the gridpane
         String[][] board = getBoard(gridPane);
+        boolean win = false;
 
-        if()
+        if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[2][2])) ||
+                (!board[2][0].isEmpty() && board[2][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[0][2]))){
+            //check diagonals
+            win = true;
+        } else if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[1][0]) && board[1][0].equalsIgnoreCase(board[2][0])) ||
+                (!board[0][1].isEmpty() && board[0][1].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[2][1])) ||
+                (!board[0][2].isEmpty() && board[0][2].equalsIgnoreCase(board[1][2]) && board[1][2].equalsIgnoreCase(board[2][2]))){
+            //check columns
+            win = true;
+        } else if((!board[0][0].isEmpty() && board[0][0].equalsIgnoreCase(board[0][1]) && board[0][1].equalsIgnoreCase(board[0][2])) ||
+                (!board[1][0].isEmpty() && board[1][0].equalsIgnoreCase(board[1][1]) && board[1][1].equalsIgnoreCase(board[1][2])) ||
+                (!board[2][0].isEmpty() && board[2][0].equalsIgnoreCase(board[2][1]) && board[2][1].equalsIgnoreCase(board[2][2]))){
+            //check rows
+            win = true;
+        }
+        return win;
 
     }
     public GameController getGameController(){
