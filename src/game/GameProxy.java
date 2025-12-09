@@ -3,88 +3,93 @@ package game;
 import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
-import java.util.Optional;
-
-public class GameProxy {
+public class GameProxy implements Player{
+    private final GridPane gridPane;
+    private final GameController gameController;
     private Player humanPlayer;
     private Player aiplayer;
-    private final GridPane gridPane;
-    private String playerChoice;
-    private String player2Choice;
-    private boolean turn;
     private Player winner;
+    private boolean turn;
     private boolean done;
     private int iterations;
 
-    public GameProxy(GridPane gamePane){
+    public GameProxy(GridPane gamePane, GameController gameController){
         this.gridPane = gamePane;
+        this.gameController = gameController;
         this.done = false;
         this.iterations = 0;
     }
 
     public void start(){
-        startPopUp();
-        this.humanPlayer = new HumanPlayer(playerChoice, this);
-        this.aiplayer = new AIPlayer(player2Choice, gridPane, this);
-        if(humanPlayer.getPiece().equalsIgnoreCase("x")){
+        this.humanPlayer = new HumanPlayer(gameController.getPlayerChoice());
+        this.aiplayer = new AIPlayer(gameController.getPlayer2Choice(), gridPane);
+        if(gameController.getPlayerChoice().equalsIgnoreCase("x")){
             message("Player 1 starts");
             turn = true;
         } else{
             message("AI player starts");
             turn = false;
-            AiPlay();
+            aiPlay();
         }
     }
 
-    public void handleHumanPlay(MouseEvent event) {
-        TextField clicked = (TextField) event.getSource();
+    @Override
+    public boolean makeMove(TextField textField) {
         if(!done){
-            if(!clicked.getText().isEmpty()){
-                message("Can't make move!\nBox already has been played!");
-            }
-            if(!turn){
-                message("Not your turn!");
-            }
-            boolean played = humanPlayer.makeMove(clicked);
-            if(played) {
-                turn = false;
-                if (checkWin(humanPlayer, iterations++)) {
-                    message(winner.toString() + " is the winner");
+            if(turn){
+                if(!textField.getText().isEmpty()){
+                    message("Can't make move!\nBox already has been played!");
                 }
-            }
-            AiPlay();
-        }
-    }
+                boolean played = humanPlayer.makeMove(textField);
+                if(played){
+                    turn = false;
+                    mark(textField, ((HumanPlayer)humanPlayer).getPiece());
 
-    private void AiPlay(){
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        if(!done){
-            pause.setOnFinished(e -> {
-                boolean play = aiplayer.makeMove(null);
-                if(play){
+                    if(checkWin(humanPlayer, iterations++)){
+                        message(winner.toString() + " is the winner");
+                        done = true;
+                    }
+                    if(!done){
+                        aiPlay();
+                    }
+                }
+                return played;
+            } else {
+                TextField aiBox = ((AIPlayer) aiplayer).getAiBox();
+
+                boolean played = aiplayer.makeMove(aiBox);
+                if(played){
                     turn = true;
+                    mark(aiBox, ((AIPlayer)aiplayer).getPiece());
                     if(checkWin(aiplayer, iterations++)){
                         message(winner.toString() + " is the winner");
                     }
                 }
+                return played;
+            }
+        }
+        return done;
+    }
+    
+    private void aiPlay(){
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        if(!done && !turn){
+            pause.setOnFinished(e -> {
+                makeMove(null);
             });
             pause.play();
         }
-
     }
 
     public void mark(TextField textField, String piece){
         textField.setText(piece);
     }
 
-    public String[][] getBoard(GridPane gridPane) {
+    private String[][] getBoard(GridPane gridPane) {
         String[][] board = new String[3][3];
 
         for (Node node : gridPane.getChildren()) {
@@ -123,29 +128,11 @@ public class GameProxy {
             message("It is a draw");
             done = true;
         }
-
         if(win){
             winner = player;
             done = true;
         }
         return win;
-    }
-
-    private void startPopUp(){
-        //get this choice and set as players choice
-        Dialog<ButtonType> popup = new Dialog<>();
-        ButtonType x = new ButtonType("X");
-        ButtonType o = new ButtonType("O");
-        popup.setTitle("Player 1: Pick X or O");
-
-        popup.getDialogPane().getButtonTypes().addAll(x, o);
-        Optional<ButtonType> choice = popup.showAndWait();
-
-        if(choice.isPresent()){
-            ButtonType button = choice.get();
-            playerChoice = button.getText();
-            player2Choice = playerChoice.equals("X") ? "O" : "X";
-        }
     }
 
     private void message(String message){

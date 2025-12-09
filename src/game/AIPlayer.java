@@ -9,42 +9,37 @@ import java.util.List;
 
 public class AIPlayer implements Player{
     private final String piece;
-    private final  GridPane pane;
-    private final GameProxy proxy;
+    private final GridPane gridPane;
 
-
-    public AIPlayer(String piece, GridPane pane, GameProxy proxy){
+    public AIPlayer(String piece, GridPane gridPane){
         this.piece = piece;
-        this.pane = pane;
-        this.proxy = proxy;
+        this.gridPane = gridPane;
     }
 
     @Override
     public boolean makeMove(TextField textField) {
         boolean played = false;
-        textField = getAiBox();
-        // Get a random empty box for AI to play
+        if(textField == null){
+            textField = getAiBox();
+        }
         if(textField != null && textField.getText().isEmpty()){
-            proxy.mark(textField, piece);
             played = true;
         }
         return played;
     }
 
     @Override
-    public String getPiece() {
-        return piece;
-    }
-
-    @Override
     public String toString(){
         return "AI Player";
+    }
+    public String getPiece(){
+        return piece;
     }
 
     public TextField getAiBox(){
         List<TextField> emptyBoxes = new ArrayList<>();
         
-        for (Node node : pane.getChildren()) {
+        for (Node node : gridPane.getChildren()) {
             if (node instanceof TextField) {
                 TextField field = (TextField) node;
                 if (field.getText().isEmpty()) {

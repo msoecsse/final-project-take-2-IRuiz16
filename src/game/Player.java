@@ -4,6 +4,5 @@ import javafx.scene.control.TextField;
 
 public interface Player {
     boolean makeMove(TextField textField);
-    String getPiece();
     String toString();
 }
