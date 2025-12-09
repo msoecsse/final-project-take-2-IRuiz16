@@ -32,13 +32,17 @@ public class AIPlayer implements Player{
     public String toString(){
         return "AI Player";
     }
+
     public String getPiece(){
         return piece;
     }
 
+    /**
+     * Helps choose where the bot will be playing its piece
+     * @return returns the TextField that was empty
+     */
     public TextField getAiBox(){
         List<TextField> emptyBoxes = new ArrayList<>();
-        
         for (Node node : gridPane.getChildren()) {
             if (node instanceof TextField) {
                 TextField field = (TextField) node;
@@ -47,11 +51,9 @@ public class AIPlayer implements Player{
                 }
             }
         }
-        
         if (emptyBoxes.isEmpty()) {
             return null;
         }
-        
         int randomIndex = (int) (Math.random() * emptyBoxes.size());
         return emptyBoxes.get(randomIndex);
     }

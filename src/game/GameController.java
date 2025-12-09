@@ -12,7 +12,6 @@ import java.util.Optional;
 public class GameController {
     @FXML
     private GridPane gridPane;
-
     private GameProxy gameProxy;
     private String playerChoice;
     private String player2Choice;
@@ -32,6 +31,14 @@ public class GameController {
         }
     }
 
+    public String getPlayerChoice(){
+        return playerChoice;
+    }
+
+    public String getPlayer2Choice(){
+        return player2Choice;
+    }
+
     private void startPopUp(){
         //get this choice and set as players choice
         Dialog<ButtonType> popup = new Dialog<>();
@@ -47,14 +54,6 @@ public class GameController {
             playerChoice = button.getText();
             player2Choice = playerChoice.equals("X") ? "O" : "X";
         }
-    }
-
-    public String getPlayerChoice(){
-        return playerChoice;
-    }
-
-    public String getPlayer2Choice(){
-        return player2Choice;
     }
 }
 

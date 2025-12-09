@@ -24,6 +24,9 @@ public class GameProxy implements Player{
         this.iterations = 0;
     }
 
+    /**
+     * Starts the game
+     */
     public void start(){
         this.humanPlayer = new HumanPlayer(gameController.getPlayerChoice());
         this.aiplayer = new AIPlayer(gameController.getPlayer2Choice(), gridPane);
@@ -35,6 +38,16 @@ public class GameProxy implements Player{
             turn = false;
             aiPlay();
         }
+    }
+
+    /**
+     * Makes the mark onto the GridPane
+     * @param textField the box of where the piece will take
+     * @param piece the piece could be the Player or the AIPlayer that is
+     *              claiming the TextField
+     */
+    public void mark(TextField textField, String piece){
+        textField.setText(piece);
     }
 
     @Override
@@ -85,9 +98,7 @@ public class GameProxy implements Player{
         }
     }
 
-    public void mark(TextField textField, String piece){
-        textField.setText(piece);
-    }
+
 
     private String[][] getBoard(GridPane gridPane) {
         String[][] board = new String[3][3];
